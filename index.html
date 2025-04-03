@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aventura Interactiva</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #f0f8ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #gameArea {
+            width: 600px;
+            height: 400px;
+            position: relative;
+            background-color: #fff;
+            border: 2px solid #000;
+        }
+        #player {
+            width: 30px;
+            height: 30px;
+            background-color: #ff69b4;
+            position: absolute;
+            top: 185px; /* Centrado verticalmente */
+            left: 285px; /* Centrado horizontalmente */
+        }
+        .mensaje {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #333;
+            font-size: 18px;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameArea">
+        <div id="player"></div>
+        <div class="mensaje" id="mensaje">Usa las teclas de flecha para moverte</div>
+    </div>
+
+    <script>
+        // Variables del juego
+        const player = document.getElementById('player');
+        const gameArea = document.getElementById('gameArea');
+        const mensaje = document.getElementById('mensaje');
+
+        const gameWidth = gameArea.clientWidth;
+        const gameHeight = gameArea.clientHeight;
+        const playerSize = 30;
+
+        // Posición inicial del jugador
+        let posX = 285;
+        let posY = 185;
+
+        // Mover al jugador
+        function moverJugador() {
+            player.style.left = posX + 'px';
+            player.style.top = posY + 'px';
+        }
+
+        // Capturar las teclas presionadas
+        window.addEventListener('keydown', function(e) {
+            switch (e.key) {
+                case 'ArrowUp':
+                    if (posY > 0) posY -= 10;  // Mueve hacia arriba
+                    break;
+                case 'ArrowDown':
+                    if (posY < gameHeight - playerSize) posY += 10;  // Mueve hacia abajo
+                    break;
+                case 'ArrowLeft':
+                    if (posX > 0) posX -= 10;  // Mueve hacia la izquierda
+                    break;
+                case 'ArrowRight':
+                    if (posX < gameWidth - playerSize) posX += 10;  // Mueve hacia la derecha
+                    break;
+            }
+            moverJugador();
+        });
+
+        // Detectar cuando el jugador llegue a una esquina (un ejemplo de interacción)
+        function detectarEsquinas() {
+            if (posX <= 0 && posY <= 0) {
+                mensaje.innerText = '¡Has llegado a la esquina superior izquierda!';
+            } else if (posX >= gameWidth - playerSize && posY <= 0) {
+                mensaje.innerText = '¡Has llegado a la esquina superior derecha!';
+            } else if (posX <= 0 && posY >= gameHeight - playerSize) {
+                mensaje.innerText = '¡Has llegado a la esquina inferior izquierda!';
+            } else if (posX >= gameWidth - playerSize && posY >= gameHeight - playerSize) {
+                mensaje.innerText = '¡Has llegado a la esquina inferior derecha!';
+            }
+        }
+
+        // Llamar a la función para detectar las esquinas cada vez que el jugador se mueve
+        setInterval(detectarEsquinas, 100);
+
+    </script>
+</body>
+</html>
